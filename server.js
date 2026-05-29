@@ -14,16 +14,19 @@ server.listen(port , () => {
 const {WebSocketServer} = require('ws');
 const wss = new WebSocketServer({server})
 
+let counter = 1;
 wss.on('connection' , (ws) => {
-    console.log('Client Connected')
+    console.log(`Client${counter} Connected`)
+    ws.username = 'user' + counter
+    counter += 1
     ws.on('message' ,(data) => {
         for(let client of wss.clients){
-            client.send(data)
-            console.log(String(data))
+            client.send(ws.username + ': ' + data)
+            console.log(`${ws.username} says: ${String(data)}`)
         }
     })
 
     ws.on('close', () => {
-    console.log('Client disconnected')
+    console.log(`${ws.username} disconnected`)
 })
 })
