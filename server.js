@@ -44,7 +44,8 @@ wss.on('connection' , (ws) => {
             //getting previous chat of this room
             let cursor = await message.find({room: ws.room} , {sender:1 , content: 1 , _id:0})
             .sort({time: 1}).limit(10)
-            ws.send(JSON.stringify(cursor))
+            let a = cursor.map((msg) => `${msg.sender}:  ${msg.content}` )
+            ws.send(a.join('\n'))
 
             return // stop here
         }
